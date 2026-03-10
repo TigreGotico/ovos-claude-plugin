@@ -17,3 +17,5 @@ jobs:
       opm_validate_interface: true
       opm_test_import: true
       opm_perf_threshold_ms: 500
+      opm_min_version: '2.2.3a1'
+      opm_max_version: '3.0.0'
