@@ -95,32 +95,33 @@ class TestClaudeCodeClientBuildCmd(unittest.TestCase):
 
     def test_print_flag_present(self):
         c = self._client()
-        cmd = c._build_cmd("Hello")
+        cmd = c._build_cmd()
         self.assertIn("--print", cmd)
         self.assertIn("--output-format", cmd)
         self.assertIn("text", cmd)
 
     def test_model_in_cmd(self):
         c = self._client(model="haiku")
-        cmd = c._build_cmd("Hello")
+        cmd = c._build_cmd()
         self.assertIn("--model", cmd)
         self.assertIn("haiku", cmd)
 
     def test_system_prompt_in_cmd(self):
         c = self._client()
-        cmd = c._build_cmd("Hello", system="Be brief")
+        cmd = c._build_cmd(system="Be brief")
         self.assertIn("--system-prompt", cmd)
         self.assertIn("Be brief", cmd)
 
     def test_no_system_prompt_when_absent(self):
         c = self._client()
-        cmd = c._build_cmd("Hello")
+        cmd = c._build_cmd()
         self.assertNotIn("--system-prompt", cmd)
 
-    def test_prompt_appended_last(self):
+    def test_prompt_not_in_cmd(self):
+        """Prompt is passed via stdin, not appended to argv."""
         c = self._client()
-        cmd = c._build_cmd("My prompt")
-        self.assertEqual(cmd[-1], "My prompt")
+        cmd = c._build_cmd()
+        self.assertNotIn("My prompt", cmd)
 
 
 class TestClaudeCodeClientRequest(unittest.TestCase):

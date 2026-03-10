@@ -359,8 +359,8 @@ class ClaudeCodeClient:
         parts = [m.content for m in messages if m.role == MessageRole.SYSTEM]
         return "\n\n".join(parts) or None
 
-    def _build_cmd(self, prompt: str,
-                   system: Optional[str] = None) -> List[str]:
+    def _build_cmd(self, system: Optional[str] = None) -> List[str]:
+        """Build the base CLI command; prompt is passed via stdin, not argv."""
         cmd = [
             self.binary,
             "--print",
@@ -371,7 +371,6 @@ class ClaudeCodeClient:
         resolved_system = system or self.config.get("system_prompt")
         if resolved_system:
             cmd += ["--system-prompt", resolved_system]
-        cmd.append(prompt)
         return cmd
 
     # ------------------------------------------------------------------
@@ -392,11 +391,12 @@ class ClaudeCodeClient:
         """
         sys_text = system or self._extract_system(messages)
         prompt = self._format_history(messages)
-        cmd = self._build_cmd(prompt, system=sys_text)
+        cmd = self._build_cmd(system=sys_text)
         LOG.debug(f"ClaudeCodeClient cmd: {cmd[:4]}…")
         try:
             result = subprocess.run(
                 cmd,
+                input=prompt,
                 capture_output=True,
                 text=True,
                 timeout=self.timeout,
@@ -430,16 +430,21 @@ class ClaudeCodeClient:
         resolved_system = sys_text or self.config.get("system_prompt")
         if resolved_system:
             cmd += ["--system-prompt", resolved_system]
-        cmd.append(prompt)
 
         LOG.debug(f"ClaudeCodeClient stream cmd: {cmd[:4]}…")
         try:
             proc = subprocess.Popen(
                 cmd,
+                stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
             )
+            try:
+                proc.stdin.write(prompt)
+                proc.stdin.close()
+            except BrokenPipeError:
+                pass
             for line in proc.stdout:
                 line = line.strip()
                 if not line:
@@ -453,11 +458,18 @@ class ClaudeCodeClient:
                     text = event.get("text", "")
                     if text:
                         yield text
-            proc.wait()
+            try:
+                proc.wait(timeout=self.timeout)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                LOG.error("claude CLI stream timed out")
+                raise RuntimeError("claude CLI stream timed out")
             if proc.returncode != 0:
                 err = proc.stderr.read().strip()
                 LOG.error(f"claude CLI stream error: {err}")
                 raise RuntimeError(f"claude CLI stream failed: {err}")
+        except RuntimeError:
+            raise
         except Exception as exc:
             LOG.error(f"ClaudeCodeClient streaming error: {exc}")
             raise
