@@ -34,6 +34,7 @@ Repository = "https://github.com/OpenVoiceOS/ovos-claude-plugin"
 
 [project.entry-points."opm.agents.chat"]
 ovos-chat-claude-plugin = "ovos_claude.chat:ClaudeChatEngine"
+ovos-chat-claude-code-plugin = "ovos_claude.chat:ClaudeCodeChatEngine"
 
 [project.entry-points."opm.agents.chat.multimodal"]
 ovos-chat-multimodal-claude-plugin = "ovos_claude.multimodal:ClaudeMultimodalChatEngine"

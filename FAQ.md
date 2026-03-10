@@ -1,4 +1,3 @@
-Last Edit: Claude Sonnet 4.6 - 2026-03-09 - Motive: Initial FAQ for ovos-claude-plugin
 
 # ovos-claude-plugin FAQ
 
@@ -26,6 +25,62 @@ Add the following to `~/.config/mycroft/mycroft.conf` under the plugin name:
 ```
 
 Alternatively, set the `ANTHROPIC_API_KEY` environment variable and omit `api_key` from config.
+
+---
+
+## Can I use Claude Code CLI instead of an API key?
+
+Yes.  `ClaudeCodeChatEngine` (`ovos-chat-claude-code-plugin`) delegates to the
+system `claude` binary (Claude Code CLI) instead of the Anthropic SDK.  No API
+key is required; it uses the authenticated Claude Code session on the host.
+
+Configure it in `mycroft.conf`:
+
+```json
+{
+  "ovos-chat-claude-code-plugin": {
+    "model": "sonnet",
+    "system_prompt": "You are a helpful voice assistant.",
+    "timeout": 60
+  }
+}
+```
+
+Optional keys:
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `claude_binary` | auto (PATH) | Explicit path to the `claude` executable |
+| `model` | `"sonnet"` | Model alias or full ID passed to `--model` |
+| `system_prompt` | — | System prompt injected into every request |
+| `timeout` | `120` | Subprocess timeout in seconds |
+| `tools` | `""` | Comma-separated CLI tools to allow (empty = chat only) |
+| `allow_system_prompts` | `false` | Merge caller-supplied system messages |
+
+---
+
+## What is the difference between the two chat engines?
+
+| Engine | Entry point key | Backend | Requires |
+|--------|----------------|---------|---------|
+| `ClaudeChatEngine` | `ovos-chat-claude-plugin` | Anthropic SDK (`anthropic` package) | API key |
+| `ClaudeCodeChatEngine` | `ovos-chat-claude-code-plugin` | `claude` CLI subprocess | Claude Code installed + authenticated |
+
+Both implement the same `ChatEngine` interface (`continue_chat`, `stream_tokens`,
+`stream_sentences`) so they are interchangeable from the OVOS perspective.
+
+---
+
+## How does ClaudeCodeChatEngine handle multi-turn history?
+
+The conversation history is serialised as a plain-text transcript
+(`User: …\nAssistant: …`) and passed as the prompt argument to
+`claude --print`.  System messages are extracted and forwarded via
+`--system-prompt`.  Streaming uses `--output-format stream-json` and
+parses `{"type":"text","text":"…"}` events from the CLI output.
+
+`ClaudeCodeClient._format_history` — `ovos_claude/api.py`
+`ClaudeCodeClient.stream_tokens` — `ovos_claude/api.py`
 
 ---
 
