@@ -63,6 +63,11 @@ ovos-yesno-claude-plugin = "ovos_claude.nli:ClaudeYesNoEngine"
 [project.entry-points."opm.agents.memory"]
 ovos-memory-claude-plugin = "ovos_claude.memory:ClaudeContextManager"
 
+# ── Persona entry points ──────────────────────────────────────────────────
+
+[project.entry-points."opm.plugin.persona"]
+Claude = "ovos_claude_persona:CLAUDE_PERSONA"
+
 # ── Transformer entry points ───────────────────────────────────────────────
 
 [project.entry-points."opm.transformer.utterance"]

@@ -28,6 +28,22 @@ Alternatively, set the `ANTHROPIC_API_KEY` environment variable and omit `api_ke
 
 ---
 
+## Is there a ready-made persona for PersonaService?
+
+Yes.  The `ovos_claude_persona` package (now shipped inside this repo) provides
+a `CLAUDE_PERSONA` dict registered under the `opm.plugin.persona` entry point
+as `"Claude"`.
+
+Users can activate it by name ("Hey, ask Claude…") or set it as their default
+persona.  No extra install is required — it ships with `ovos-claude-plugin`.
+
+To customise it, add an `ovos-chat-claude-plugin` key in
+`~/.config/mycroft/mycroft.conf` under `persona` → `solvers`.
+
+Source: `ovos_claude_persona/__init__.py`
+
+---
+
 ## Can I use Claude Code CLI instead of an API key?
 
 Yes.  `ClaudeCodeChatEngine` (`ovos-chat-claude-code-plugin`) delegates to the
