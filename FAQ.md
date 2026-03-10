@@ -1,4 +1,3 @@
-Last Edit: Claude Sonnet 4.6 - 2026-03-10 - Motive: Add Last Edit header
 
 # ovos-claude-plugin FAQ
 
