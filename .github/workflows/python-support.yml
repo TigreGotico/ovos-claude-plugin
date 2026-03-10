@@ -14,3 +14,5 @@ jobs:
       version_file: 'ovos_claude/version.py'
       entry_point: ''
       python_versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
+      install_modes: '["regular", "editable"]'
+      install_extras: ''

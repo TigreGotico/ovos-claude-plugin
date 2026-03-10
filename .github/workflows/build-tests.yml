@@ -13,5 +13,3 @@ jobs:
       python_versions: '["3.10", "3.11", "3.12", "3.13", "3.14"]'
       install_extras: 'test'
       test_path: 'test'
-      package_name: 'ovos_claude_plugin'
-      version_file: 'ovos_claude/version.py'
