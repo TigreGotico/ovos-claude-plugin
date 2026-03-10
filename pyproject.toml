@@ -70,7 +70,7 @@ Claude = "ovos_claude_persona:CLAUDE_PERSONA"
 
 # ── Transformer entry points ───────────────────────────────────────────────
 
-[project.entry-points."opm.transformer.utterance"]
+[project.entry-points."opm.transformer.text"]
 ovos-utterance-transformer-claude-plugin = "ovos_claude.transformers:ClaudeUtteranceTransformer"
 
 [project.entry-points."opm.transformer.dialog"]
