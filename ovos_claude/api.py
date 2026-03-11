@@ -11,6 +11,8 @@ import base64
 import json
 import shutil
 import subprocess
+import threading
+import time
 from typing import Any, Dict, Iterable, List, Optional, Union
 
 from ovos_utils.log import LOG
@@ -370,7 +372,7 @@ class ClaudeCodeClient:
         ]
         resolved_system = system or self.config.get("system_prompt")
         if resolved_system:
-            cmd += ["--system-prompt", resolved_system]
+            cmd += ["--append-system-prompt", resolved_system]
         return cmd
 
     # ------------------------------------------------------------------
@@ -429,7 +431,7 @@ class ClaudeCodeClient:
         ]
         resolved_system = sys_text or self.config.get("system_prompt")
         if resolved_system:
-            cmd += ["--system-prompt", resolved_system]
+            cmd += ["--append-system-prompt", resolved_system]
 
         LOG.debug(f"ClaudeCodeClient stream cmd: {cmd[:4]}…")
         try:
@@ -445,7 +447,12 @@ class ClaudeCodeClient:
                 proc.stdin.close()
             except BrokenPipeError:
                 pass
+            deadline = time.monotonic() + self.timeout
             for line in proc.stdout:
+                if time.monotonic() > deadline:
+                    proc.kill()
+                    LOG.error("claude CLI stream timed out during read")
+                    raise RuntimeError("claude CLI stream timed out")
                 line = line.strip()
                 if not line:
                     continue
@@ -459,7 +466,7 @@ class ClaudeCodeClient:
                     if text:
                         yield text
             try:
-                proc.wait(timeout=self.timeout)
+                proc.wait(timeout=max(0, deadline - time.monotonic()))
             except subprocess.TimeoutExpired:
                 proc.kill()
                 LOG.error("claude CLI stream timed out")

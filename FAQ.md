@@ -90,10 +90,13 @@ Both implement the same `ChatEngine` interface (`continue_chat`, `stream_tokens`
 ## How does ClaudeCodeChatEngine handle multi-turn history?
 
 The conversation history is serialised as a plain-text transcript
-(`User: …\nAssistant: …`) and passed as the prompt argument to
-`claude --print`.  System messages are extracted and forwarded via
-`--system-prompt`.  Streaming uses `--output-format stream-json` and
-parses `{"type":"text","text":"…"}` events from the CLI output.
+(`User: …\nAssistant: …`) and passed via stdin to `claude --print`.
+System messages are extracted and forwarded via `--append-system-prompt`
+(which layers instructions on top of Claude Code's built-in defaults
+rather than replacing them).  Streaming uses `--output-format stream-json`
+and parses `{"type":"text","text":"…"}` events from the CLI output.
+A deadline is enforced across the entire read loop so a wedged process
+cannot block the caller indefinitely.
 
 `ClaudeCodeClient._format_history` — `ovos_claude/api.py`
 `ClaudeCodeClient.stream_tokens` — `ovos_claude/api.py`

@@ -2,7 +2,7 @@ name: Code Coverage
 
 on:
   pull_request:
-    branches: [dev]
+    branches: [dev, master, main]
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     secrets: inherit
     with:
       python_version: '3.11'
-      coverage_source: 'ovos_claude_plugin'
+      coverage_source: 'ovos_claude'
       test_path: 'test/'
       install_extras: ''
       min_coverage: 0

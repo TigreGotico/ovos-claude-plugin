@@ -2,7 +2,7 @@ name: License Check
 
 on:
   pull_request:
-    branches: [dev]
+    branches: [dev, master, main]
   workflow_dispatch:
 
 jobs:

@@ -10,5 +10,5 @@ jobs:
     uses: OpenVoiceOS/gh-automations/.github/workflows/release-preview.yml@dev
     secrets: inherit
     with:
-      package_name: 'ovos_claude_plugin'
+      package_name: 'ovos-claude-plugin'
       version_file: 'ovos_claude/version.py'

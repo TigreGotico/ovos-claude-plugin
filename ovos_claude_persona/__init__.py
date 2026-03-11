@@ -5,8 +5,8 @@ The persona dict is loaded by PersonaService via the ``opm.plugin.persona``
 entry point.  Users can activate Claude by name ("Hey, ask Claude...") or
 set it as their default persona.
 
-To override settings, add an ``ovos-chat-claude-plugin`` key in
-``~/.config/mycroft/mycroft.conf`` under ``persona`` → ``Claude``.
+To override settings, add an ``ovos-chat-claude-plugin`` key nested under
+``persona`` → ``Claude`` in ``~/.config/mycroft/mycroft.conf``.
 """
 CLAUDE_PERSONA = {
     "name": "Claude",
