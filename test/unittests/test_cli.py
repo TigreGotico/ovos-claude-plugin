@@ -109,13 +109,13 @@ class TestClaudeCodeClientBuildCmd(unittest.TestCase):
     def test_system_prompt_in_cmd(self):
         c = self._client()
         cmd = c._build_cmd(system="Be brief")
-        self.assertIn("--system-prompt", cmd)
+        self.assertIn("--append-system-prompt", cmd)
         self.assertIn("Be brief", cmd)
 
     def test_no_system_prompt_when_absent(self):
         c = self._client()
         cmd = c._build_cmd()
-        self.assertNotIn("--system-prompt", cmd)
+        self.assertNotIn("--append-system-prompt", cmd)
 
     def test_prompt_not_in_cmd(self):
         """Prompt is passed via stdin, not appended to argv."""
@@ -155,7 +155,7 @@ class TestClaudeCodeClientRequest(unittest.TestCase):
         ]
         c.request(messages)
         cmd = mock_run.call_args[0][0]
-        self.assertIn("--system-prompt", cmd)
+        self.assertIn("--append-system-prompt", cmd)
         self.assertIn("Be terse", cmd)
 
 

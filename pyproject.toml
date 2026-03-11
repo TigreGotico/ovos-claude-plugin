@@ -7,7 +7,7 @@ name = "ovos-claude-plugin"
 dynamic = ["version"]
 description = "Anthropic Claude plugin for OpenVoiceOS — chat, multimodal, summarisation, NLU, and memory engines"
 readme = "README.md"
-license = "MIT"
+license = {text = "MIT"}
 authors = [{name = "OpenVoiceOS", email = "jarbasai@mailfence.com"}]
 requires-python = ">=3.9"
 keywords = [
@@ -86,3 +86,6 @@ include = ["ovos_claude*"]
 
 [tool.setuptools.dynamic]
 version = {attr = "ovos_claude.version.__version__"}
+
+[tool.pytest.ini_options]
+testpaths = ["test/unittests"]
