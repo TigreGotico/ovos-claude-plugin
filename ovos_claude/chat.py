@@ -4,6 +4,9 @@ ClaudeChatEngine — opm.agents.chat plugin.
 Wraps the Anthropic messages API as an OVOS ChatEngine so that any
 component loading ``opm.agents.chat`` plugins (PersonaService, etc.)
 can use Claude for multi-turn voice conversations.
+
+Also provides ClaudeCodeChatEngine, which uses the system ``claude`` CLI
+instead of the SDK — useful when no API key is available.
 """
 from typing import Any, Dict, Iterable, List, Optional
 
@@ -12,7 +15,7 @@ from ovos_utils.log import LOG
 
 from sentence_stream import SentenceBoundaryDetector
 
-from ovos_claude.api import AnthropicClient
+from ovos_claude.api import AnthropicClient, ClaudeCodeClient
 
 
 class ClaudeChatEngine(ChatEngine):
@@ -118,6 +121,89 @@ class ClaudeChatEngine(ChatEngine):
         grammatical sentence boundary is detected, then yields the sentence.
         Suitable for direct TTS synthesis.
         """
+        messages = self._prepare_messages(messages)
+        boundary_detector = SentenceBoundaryDetector()
+
+        for token in self.api.stream_tokens(messages):
+            yield from boundary_detector.add_chunk(token)
+
+        final = boundary_detector.finish()
+        if final:
+            yield final
+
+
+class ClaudeCodeChatEngine(ChatEngine):
+    """
+    OVOS ChatEngine backed by the system ``claude`` CLI (Claude Code).
+
+    Requires Claude Code to be installed and authenticated on the host
+    machine.  No Anthropic API key is needed; the CLI uses its own
+    session credentials.
+
+    Configuration keys (under the plugin entry in ``settings.json``):
+        claude_binary (str):    Path to the ``claude`` executable.
+                                Auto-discovered from PATH if omitted.
+        model (str):            Model alias or ID (default: ``"sonnet"``).
+        system_prompt (str):    Default system prompt.
+        timeout (int):          CLI timeout in seconds (default: 120).
+        tools (str):            Allowed tools passed to CLI (default: ``""``
+                                — no tools, chat-only mode).
+        allow_system_prompts (bool): Merge caller system messages.
+                                     Default: False.
+
+    Entry point: ``opm.agents.chat``
+    """
+
+    def __init__(self, config: Optional[Dict[str, Any]] = None):
+        super().__init__(config)
+        self.api = ClaudeCodeClient(self.config)
+        self.system_prompt: Optional[str] = self.config.get("system_prompt")
+        self.allow_system: bool = bool(self.config.get("allow_system_prompts", False))
+
+    # ------------------------------------------------------------------
+    # Internal helpers (identical policy to ClaudeChatEngine)
+    # ------------------------------------------------------------------
+
+    def _prepare_messages(self, messages: List[AgentMessage]) -> List[AgentMessage]:
+        if not self.allow_system:
+            messages = [m for m in messages if m.role != MessageRole.SYSTEM]
+
+        if self.system_prompt:
+            sys_msg = AgentMessage(role=MessageRole.SYSTEM, content=self.system_prompt)
+            if messages and messages[0].role == MessageRole.SYSTEM:
+                if self.allow_system:
+                    merged = self.system_prompt + "\n" + messages[0].content
+                    messages[0] = AgentMessage(role=MessageRole.SYSTEM, content=merged)
+                else:
+                    messages[0] = sys_msg
+            else:
+                messages = [sys_msg] + messages
+
+        return messages
+
+    # ------------------------------------------------------------------
+    # ChatEngine interface
+    # ------------------------------------------------------------------
+
+    def continue_chat(self, messages: List[AgentMessage],
+                      session_id: str = "default",
+                      lang: Optional[str] = None,
+                      units: Optional[str] = None) -> AgentMessage:
+        messages = self._prepare_messages(messages)
+        text = self.api.request(messages)
+        return AgentMessage(role=MessageRole.ASSISTANT, content=text)
+
+    def stream_tokens(self, messages: List[AgentMessage],
+                      session_id: str = "default",
+                      lang: Optional[str] = None,
+                      units: Optional[str] = None) -> Iterable[str]:
+        messages = self._prepare_messages(messages)
+        yield from self.api.stream_tokens(messages)
+
+    def stream_sentences(self, messages: List[AgentMessage],
+                         session_id: str = "default",
+                         lang: Optional[str] = None,
+                         units: Optional[str] = None) -> Iterable[str]:
         messages = self._prepare_messages(messages)
         boundary_detector = SentenceBoundaryDetector()
 
