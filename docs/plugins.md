@@ -16,9 +16,9 @@ Supports synchronous responses, raw token streaming, and sentence-level streamin
 
 | Method | Description |
 |---|---|
-| `continue_chat(messages, session_id, lang, units) → AgentMessage` | Single blocking response — `chat.py:ClaudeChatEngine.continue_chat` |
-| `stream_tokens(messages, ...) → Iterable[str]` | Raw token stream, not suitable for direct TTS — `chat.py:ClaudeChatEngine.stream_tokens` |
-| `stream_sentences(messages, ...) → Iterable[str]` | Sentence-buffered stream via `SentenceBoundaryDetector`, TTS-ready — `chat.py:ClaudeChatEngine.stream_sentences` |
+| `continue_chat(messages, session_id, lang, units) → AgentMessage` | Single blocking response (`chat.py:ClaudeChatEngine.continue_chat`) |
+| `stream_tokens(messages, ...) → Iterable[str]` | Raw token stream, not suitable for direct TTS (`chat.py:ClaudeChatEngine.stream_tokens`) |
+| `stream_sentences(messages, ...) → Iterable[str]` | Sentence-buffered stream via `SentenceBoundaryDetector`, TTS-ready (`chat.py:ClaudeChatEngine.stream_sentences`) |
 | `get_response(utterance, ...) → str` | Convenience single-turn wrapper inherited from `ChatEngine` |
 
 ### Usage
@@ -144,7 +144,7 @@ print(summarizer.summarize(messages))
 **Source:** `ovos_claude/coref.py:ClaudeCoreferenceEngine`
 
 Resolves pronouns and ambiguous references in voice commands.
-`contains_corefs()` uses a fast per-language pronoun wordlist — `api.py:PRONOUN_WORDLISTS` —
+`contains_corefs()` uses a fast per-language pronoun wordlist (`api.py:PRONOUN_WORDLISTS`)
 to avoid calling the API on utterances that need no resolution.
 
 ### Supported languages (wordlist)
@@ -272,8 +272,8 @@ print(engine.yes_or_no("Ready?", "what do you mean?"))                       # N
 **Source:** `ovos_claude/memory.py:ClaudeContextManager`
 
 Manages per-session conversation history in memory.
-When the history exceeds `max_history` messages, the oldest half is summarised by Claude
-and stored as a single SYSTEM message — `memory.py:ClaudeContextManager._compress_history`.
+When the history exceeds `max_history` messages, the oldest half is summarized by Claude
+and stored as a single SYSTEM message (`memory.py:ClaudeContextManager._compress_history`).
 
 ### Usage
 
@@ -296,7 +296,7 @@ ctx = mem.build_conversation_context("What is the capital of France?", session)
 reply = engine.continue_chat(ctx)
 mem.update_history([AgentMessage(MessageRole.USER, "What is the capital of France?"), reply], session)
 
-# Turn 2 — history from turn 1 is included automatically
+# Turn 2: history from turn 1 is included automatically
 ctx = mem.build_conversation_context("And what language do they speak?", session)
 reply = engine.continue_chat(ctx)
 ```
@@ -310,7 +310,7 @@ reply = engine.continue_chat(ctx)
 **Source:** `ovos_claude/transformers.py:ClaudeUtteranceTransformer`
 
 Runs after ASR, before intent matching (`ovos-core/ovos_core/transformers.py`).
-Normalises informal or noisy speech to standard form.
+Normalizes informal or noisy speech to standard form.
 Falls back to the original utterance on API error.
 
 ### Usage
@@ -348,3 +348,6 @@ t = ClaudeDialogTransformer(config={
 result, ctx = t.transform("The forecast shows rain tomorrow.")
 print(result)  # "Oh wow, rain is coming tomorrow — how exciting for the plants!"
 ```
+
+---
+[Home](index.md) · [Configuration →](configuration.md)

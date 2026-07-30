@@ -1,23 +1,23 @@
 
 # OVOS Claude Plugin
 
-A collection of [OpenVoiceOS](https://openvoiceos.org/) plugins that connect OVOS to the [Anthropic Claude](https://anthropic.com) API.
+This is a collection of [OpenVoiceOS](https://openvoiceos.org/) plugins that connect OVOS to the [Anthropic Claude](https://anthropic.com) API.
 
 ## Plugins provided
 
 | Entry point | Class | Purpose |
 |---|---|---|
 | `opm.agents.chat` | `ClaudeChatEngine` | Multi-turn chat for [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona) |
-| `opm.agents.chat.multimodal` | `ClaudeMultimodalChatEngine` | Vision (base64 images) + multi-turn chat |
+| `opm.agents.chat.multimodal` | `ClaudeMultimodalChatEngine` | Vision (base64 images) plus multi-turn chat |
 | `opm.agents.summarizer` | `ClaudeSummarizerEngine` | Condense long documents into plain-text summaries |
 | `opm.agents.summarizer.chat` | `ClaudeChatSummarizerEngine` | Compress chat history for long-running sessions |
 | `opm.agents.coref` | `ClaudeCoreferenceEngine` | Resolve pronouns and ambiguous references in voice commands |
-| `opm.agents.reranker` | `ClaudeReRankerEngine` | Semantically rank candidate answers or search results |
+| `opm.agents.reranker` | `ClaudeReRankerEngine` | Rank candidate answers or search results by meaning |
 | `opm.agents.extractive_qa` | `ClaudeExtractiveQAEngine` | Extract the exact passage that answers a question |
 | `opm.agents.nli` | `ClaudeNLIEngine` | Predict whether a premise entails a hypothesis |
-| `opm.agents.yesno` | `ClaudeYesNoEngine` | Classify ambiguous responses ("I guess") as yes / no / unknown |
+| `opm.agents.yesno` | `ClaudeYesNoEngine` | Classify ambiguous responses ("I guess") as yes, no, or unknown |
 | `opm.agents.memory` | `ClaudeContextManager` | Per-session memory with automatic history compression |
-| `opm.transformer.utterance` | `ClaudeUtteranceTransformer` | Normalise noisy ASR output before intent matching |
+| `opm.transformer.utterance` | `ClaudeUtteranceTransformer` | Normalize noisy ASR output before intent matching |
 | `opm.transformer.dialog` | `ClaudeDialogTransformer` | Rewrite skill responses before TTS synthesis |
 
 ## Requirements
@@ -33,7 +33,7 @@ A collection of [OpenVoiceOS](https://openvoiceos.org/) plugins that connect OVO
 pip install ovos-claude-plugin
 ```
 
-For the ready-made Claude persona:
+For the ready-made Claude persona, also install:
 
 ```bash
 pip install ovos-claude-persona

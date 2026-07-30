@@ -2,7 +2,7 @@
 # Configuration Reference
 
 All plugins share the same base configuration keys because they all delegate to
-`AnthropicClient` — `ovos_claude/api.py:AnthropicClient.__init__`.
+`AnthropicClient` (`ovos_claude/api.py:AnthropicClient.__init__`).
 
 Plugin-specific keys are listed in the per-plugin sections below.
 
@@ -32,14 +32,14 @@ Plugin-specific keys are listed in the per-plugin sections below.
 
 ## Chat engine (`ovos-chat-claude-plugin`)
 
-`ClaudeChatEngine` — `ovos_claude/chat.py:ClaudeChatEngine`
+`ClaudeChatEngine` (`ovos_claude/chat.py:ClaudeChatEngine`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `system_prompt` | `str` | `null` | System instruction prepended to every conversation. |
 | `allow_system_prompts` | `bool` | `false` | When `true`, system messages from the caller are kept. When both a caller system message and a configured `system_prompt` exist they are merged (configured prompt first). |
 
-### System prompt behaviour
+### System prompt behavior
 
 | `allow_system_prompts` | Caller sends system message | Result |
 |---|---|---|
@@ -64,13 +64,13 @@ Plugin-specific keys are listed in the per-plugin sections below.
 
 ---
 
-## Summariser (`ovos-summarizer-claude-plugin`)
+## Summarizer (`ovos-summarizer-claude-plugin`)
 
-`ClaudeSummarizerEngine` — `ovos_claude/summarizer.py:ClaudeSummarizerEngine`
+`ClaudeSummarizerEngine` (`ovos_claude/summarizer.py:ClaudeSummarizerEngine`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
-| `system_prompt` | `str` | See source | System instruction for the summarisation model. |
+| `system_prompt` | `str` | See source | System instruction for the summarization model. |
 | `prompt_template` | `str` | See source | Template with a `{content}` placeholder. |
 
 Default `prompt_template`:
@@ -84,9 +84,9 @@ Text:
 
 ---
 
-## Chat summariser (`ovos-chat-summarizer-claude-plugin`)
+## Chat summarizer (`ovos-chat-summarizer-claude-plugin`)
 
-`ClaudeChatSummarizerEngine` — `ovos_claude/summarizer.py:ClaudeChatSummarizerEngine`
+`ClaudeChatSummarizerEngine` (`ovos_claude/summarizer.py:ClaudeChatSummarizerEngine`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
@@ -96,7 +96,7 @@ Text:
 
 ## Coreference engine (`ovos-coref-claude-plugin`)
 
-`ClaudeCoreferenceEngine` — `ovos_claude/coref.py:ClaudeCoreferenceEngine`
+`ClaudeCoreferenceEngine` (`ovos_claude/coref.py:ClaudeCoreferenceEngine`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
@@ -107,7 +107,7 @@ Text:
 
 ## Reranker (`ovos-reranker-claude-plugin`)
 
-`ClaudeReRankerEngine` — `ovos_claude/reranker.py:ClaudeReRankerEngine`
+`ClaudeReRankerEngine` (`ovos_claude/reranker.py:ClaudeReRankerEngine`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
@@ -117,7 +117,7 @@ Text:
 
 ## Extractive QA (`ovos-extractive-qa-claude-plugin`)
 
-`ClaudeExtractiveQAEngine` — `ovos_claude/qa.py:ClaudeExtractiveQAEngine`
+`ClaudeExtractiveQAEngine` (`ovos_claude/qa.py:ClaudeExtractiveQAEngine`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
@@ -127,7 +127,7 @@ Text:
 
 ## NLI (`ovos-nli-claude-plugin`)
 
-`ClaudeNLIEngine` — `ovos_claude/nli.py:ClaudeNLIEngine`
+`ClaudeNLIEngine` (`ovos_claude/nli.py:ClaudeNLIEngine`)
 
 No additional keys beyond the common set.
 
@@ -135,7 +135,7 @@ No additional keys beyond the common set.
 
 ## Yes/No classifier (`ovos-yesno-claude-plugin`)
 
-`ClaudeYesNoEngine` — `ovos_claude/nli.py:ClaudeYesNoEngine`
+`ClaudeYesNoEngine` (`ovos_claude/nli.py:ClaudeYesNoEngine`)
 
 No additional keys beyond the common set.
 
@@ -143,7 +143,7 @@ No additional keys beyond the common set.
 
 ## Memory / context manager (`ovos-memory-claude-plugin`)
 
-`ClaudeContextManager` — `ovos_claude/memory.py:ClaudeContextManager`
+`ClaudeContextManager` (`ovos_claude/memory.py:ClaudeContextManager`)
 
 | Key | Type | Default | Description |
 |---|---|---|---|
@@ -155,7 +155,7 @@ No additional keys beyond the common set.
 
 ## Utterance transformer (`ovos-utterance-transformer-claude-plugin`)
 
-`ClaudeUtteranceTransformer` — `ovos_claude/transformers.py:ClaudeUtteranceTransformer`
+`ClaudeUtteranceTransformer` (`ovos_claude/transformers.py:ClaudeUtteranceTransformer`)
 
 Configured under `utterance_transformers` in `mycroft.conf`:
 
@@ -179,7 +179,7 @@ Configured under `utterance_transformers` in `mycroft.conf`:
 
 ## Dialog transformer (`ovos-dialog-transformer-claude-plugin`)
 
-`ClaudeDialogTransformer` — `ovos_claude/transformers.py:ClaudeDialogTransformer`
+`ClaudeDialogTransformer` (`ovos_claude/transformers.py:ClaudeDialogTransformer`)
 
 Configured under `dialog_transformers` in `mycroft.conf`:
 
@@ -209,3 +209,6 @@ Configured under `dialog_transformers` in `mycroft.conf`:
 | `"Rewrite in the style of a grumpy old pirate."` | Character voice |
 | `"Make it sound enthusiastic and upbeat."` | Tone adjustment |
 | `"Remove all technical jargon."` | Plain language |
+
+---
+[← Plugins](plugins.md) · [Home](index.md) · [Persona integration →](persona-integration.md)

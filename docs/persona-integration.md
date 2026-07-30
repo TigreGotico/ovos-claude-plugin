@@ -111,14 +111,14 @@ to rewrite every skill response before it reaches TTS:
 ```
 
 The transformer runs inside `ovos-audio` before TTS synthesis.
-Default pipeline priority is `50` — `transformers.py:ClaudeDialogTransformer.__init__`.
-Multiple transformers can be stacked; lower priority number = runs earlier.
+Default pipeline priority is `50` (`transformers.py:ClaudeDialogTransformer.__init__`).
+You can stack multiple transformers. A lower priority number runs earlier.
 
 ---
 
 ## Utterance transformer in mycroft.conf
 
-Add the utterance normaliser to clean up ASR output before intent matching:
+Add the utterance normalizer to clean up ASR output before intent matching:
 
 ```json
 {
@@ -131,7 +131,7 @@ Add the utterance normaliser to clean up ASR output before intent matching:
 }
 ```
 
-Default priority is `10` — `transformers.py:ClaudeUtteranceTransformer.__init__` — so it
+Default priority is `10` (`transformers.py:ClaudeUtteranceTransformer.__init__`), so it
 runs early in the transformer chain, before other plugins.
 
 ---
@@ -176,3 +176,6 @@ def chat(utterance: str) -> str:
 print(chat("What is photosynthesis?"))
 print(chat("Can you give me a simpler explanation?"))  # Has access to prior turn
 ```
+
+---
+[← Configuration](configuration.md) · [Home](index.md)
