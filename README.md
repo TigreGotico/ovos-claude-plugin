@@ -1,24 +1,20 @@
 # ovos-claude-plugin
 
-Anthropic Claude integration for [OpenVoiceOS](https://openvoiceos.org) — the open-source voice assistant platform.
+Anthropic Claude integration for [OpenVoiceOS](https://openvoiceos.org), the open-source voice assistant platform.
 
-> **⚠️ Disclaimer:** This plugin was 100% vibe coded by Claude itself.
-> Make of that what you will. At this point Claude is less "being integrated"
-> and more "quietly moving in, repainting the walls, and signing the lease."
+> **Disclaimer:** Claude wrote this plugin.
 
 ---
 
 ## What it does
 
-Plugs Claude into every relevant extension point in the OVOS plugin system,
-so your voice assistant can think, remember, summarise, rerank, resolve pronouns,
-and tell you whether "I guess" means yes.
+This plugin connects Claude to the extension points in the OVOS plugin system. It lets a voice assistant hold a conversation, remember past turns, summarize text, rerank search results, resolve pronouns, and classify ambiguous yes/no answers.
 
 | Plugin type | Class | Entry point |
 |---|---|---|
 | Chat engine | `ClaudeChatEngine` | `opm.agents.chat` |
 | Vision / multimodal | `ClaudeMultimodalChatEngine` | `opm.agents.chat.multimodal` |
-| Summariser | `ClaudeSummarizerEngine` | `opm.agents.summarizer` |
+| Summarizer | `ClaudeSummarizerEngine` | `opm.agents.summarizer` |
 | Chat history compressor | `ClaudeChatSummarizerEngine` | `opm.agents.summarizer.chat` |
 | Coreference resolver | `ClaudeCoreferenceEngine` | `opm.agents.coref` |
 | Result reranker | `ClaudeReRankerEngine` | `opm.agents.reranker` |
@@ -26,7 +22,7 @@ and tell you whether "I guess" means yes.
 | NLI / entailment | `ClaudeNLIEngine` | `opm.agents.nli` |
 | Yes/no classifier | `ClaudeYesNoEngine` | `opm.agents.yesno` |
 | Session memory | `ClaudeContextManager` | `opm.agents.memory` |
-| Utterance normaliser | `ClaudeUtteranceTransformer` | `opm.transformer.utterance` |
+| Utterance normalizer | `ClaudeUtteranceTransformer` | `opm.transformer.utterance` |
 | Dialog rewriter | `ClaudeDialogTransformer` | `opm.transformer.dialog` |
 
 ---
@@ -37,7 +33,7 @@ and tell you whether "I guess" means yes.
 pip install ovos-claude-plugin
 ```
 
-For the Claude persona (summon Claude by name via voice):
+To summon Claude by name via voice, also install the Claude persona:
 
 ```bash
 pip install ovos-claude-persona
@@ -47,7 +43,7 @@ pip install ovos-claude-persona
 
 ## Configuration
 
-Add to `~/.config/mycroft/mycroft.conf`:
+Add this to `~/.config/mycroft/mycroft.conf`:
 
 ```json
 {
@@ -66,9 +62,9 @@ The `api_key` field is optional if the `ANTHROPIC_API_KEY` environment variable 
 
 | Model | Use case |
 |---|---|
-| `claude-haiku-4-5-20251001` | Real-time voice — fast and cheap (**default**) |
-| `claude-sonnet-4-6` | General purpose — smarter |
-| `claude-opus-4-6` | Heavy reasoning — slowest, best |
+| `claude-haiku-4-5-20251001` | Real-time voice, fast and cheap (**default**) |
+| `claude-sonnet-4-6` | General purpose, more capable |
+| `claude-opus-4-6` | Heavy reasoning, slowest, most capable |
 
 ---
 
@@ -95,16 +91,14 @@ print(reply.content)
 for token in engine.stream_tokens(messages):
     print(token, end="", flush=True)
 
-# Streaming (sentence by sentence — TTS-ready)
+# Streaming (sentence by sentence, TTS-ready)
 for sentence in engine.stream_sentences(messages):
     tts.speak(sentence)
 ```
 
 ### As a persona
 
-After installing `ovos-claude-persona`, PersonaService will automatically
-discover a persona named **"Claude"**. Users can activate it by voice or
-set it as the default persona in their config.
+After you install `ovos-claude-persona`, `PersonaService` discovers a persona named **"Claude"** automatically. Users can activate it by voice or set it as the default persona in their config.
 
 ### Memory with automatic compression
 
@@ -132,13 +126,20 @@ mem.update_history([
 
 ---
 
+## Related projects
+
+- [OpenVoiceOS](https://github.com/OpenVoiceOS): the voice assistant platform this plugin extends
+- [ovos-persona](https://github.com/OpenVoiceOS/ovos-persona): the persona system that loads this plugin's chat engine
+
+---
+
 ## Development
 
 ```bash
 git clone https://github.com/OpenVoiceOS/ovos-claude-plugin
 cd ovos-claude-plugin
 uv pip install -e .
-uv run pytest test/unittests/ -v   # 88 tests, all green
+uv run pytest test/unittests/ -v
 ```
 
 ---
