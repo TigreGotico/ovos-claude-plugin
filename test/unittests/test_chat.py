@@ -76,6 +76,22 @@ class TestClaudeChatEngineContinueChat(unittest.TestCase):
         self.assertEqual(result.content, "Hello back")
 
     @patch("ovos_claude.chat.AnthropicClient.request")
+    def test_continue_chat_accepts_tools_kwarg(self, mock_request):
+        """Base ChatEngine.continue_chat carries `tools` unconditionally;
+        an engine that can't use tools must still accept and ignore it."""
+        mock_request.return_value = "Hello back"
+        engine = ClaudeChatEngine({"api_key": "test"})
+        messages = [AgentMessage(MessageRole.USER, "Hello")]
+
+        result_none = engine.continue_chat(messages, tools=None)
+        self.assertIsInstance(result_none, AgentMessage)
+
+        result_with_tools = engine.continue_chat(
+            messages, tools=[{"name": "get_weather", "description": "d", "parameters": {}}]
+        )
+        self.assertIsInstance(result_with_tools, AgentMessage)
+
+    @patch("ovos_claude.chat.AnthropicClient.request")
     def test_get_response_convenience(self, mock_request):
         mock_request.return_value = "Sure"
         engine = ClaudeChatEngine({"api_key": "test"})

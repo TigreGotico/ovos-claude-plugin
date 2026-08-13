@@ -22,6 +22,25 @@ class TestClaudeMultimodalChatEngine(unittest.TestCase):
         self.assertEqual(result.content, "I see a cat in the image.")
 
     @patch("ovos_claude.multimodal.AnthropicClient.request_multimodal")
+    def test_continue_chat_accepts_tools_kwarg(self, mock_request):
+        """Base MultimodalChatEngine.continue_chat carries `tools`
+        unconditionally; an engine that can't use tools must still accept
+        and ignore it."""
+        mock_request.return_value = "I see a cat in the image."
+        engine = ClaudeMultimodalChatEngine(config={"api_key": "test"})
+        messages = [
+            MultimodalAgentMessage(role=MessageRole.USER, content="What is in this image?")
+        ]
+
+        result_none = engine.continue_chat(messages, tools=None)
+        self.assertIsInstance(result_none, MultimodalAgentMessage)
+
+        result_with_tools = engine.continue_chat(
+            messages, tools=[{"name": "get_weather", "description": "d", "parameters": {}}]
+        )
+        self.assertIsInstance(result_with_tools, MultimodalAgentMessage)
+
+    @patch("ovos_claude.multimodal.AnthropicClient.request_multimodal")
     def test_system_prompt_injected(self, mock_request):
         mock_request.return_value = "Response"
         engine = ClaudeMultimodalChatEngine(config={
