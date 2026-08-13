@@ -10,7 +10,7 @@ instead of the SDK — useful when no API key is available.
 """
 from typing import Any, Dict, Iterable, List, Optional
 
-from ovos_plugin_manager.templates.agents import AgentMessage, ChatEngine, MessageRole
+from ovos_plugin_manager.templates.agents import AgentMessage, ChatEngine, MessageRole, ToolsArg
 from ovos_utils.log import LOG
 
 from sentence_stream import SentenceBoundaryDetector
@@ -79,7 +79,8 @@ class ClaudeChatEngine(ChatEngine):
     def continue_chat(self, messages: List[AgentMessage],
                       session_id: str = "default",
                       lang: Optional[str] = None,
-                      units: Optional[str] = None) -> AgentMessage:
+                      units: Optional[str] = None,
+                      tools: ToolsArg = None) -> AgentMessage:
         """
         Generate a complete response for the given conversation history.
 
@@ -89,6 +90,9 @@ class ClaudeChatEngine(ChatEngine):
                         interface compatibility).
             lang:       BCP-47 language code hint (informational).
             units:      Preferred unit system (informational).
+            tools:      Accepted for contract conformance with the base
+                        ``ChatEngine`` signature; this engine does not
+                        support tool calling and ignores it.
 
         Returns:
             AgentMessage with ``role=ASSISTANT`` and the model's reply.
@@ -188,7 +192,10 @@ class ClaudeCodeChatEngine(ChatEngine):
     def continue_chat(self, messages: List[AgentMessage],
                       session_id: str = "default",
                       lang: Optional[str] = None,
-                      units: Optional[str] = None) -> AgentMessage:
+                      units: Optional[str] = None,
+                      tools: ToolsArg = None) -> AgentMessage:
+        # `tools` accepted for contract conformance with the base ChatEngine
+        # signature; this engine does not support tool calling and ignores it.
         messages = self._prepare_messages(messages)
         text = self.api.request(messages)
         return AgentMessage(role=MessageRole.ASSISTANT, content=text)

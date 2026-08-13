@@ -250,6 +250,22 @@ class TestClaudeCodeChatEngineContinueChat(unittest.TestCase):
         self.assertEqual(result.role, MessageRole.ASSISTANT)
         self.assertEqual(result.content, "Hello back")
 
+    @patch("ovos_claude.api.ClaudeCodeClient.request")
+    def test_continue_chat_accepts_tools_kwarg(self, mock_request):
+        """Base ChatEngine.continue_chat carries `tools` unconditionally;
+        an engine that can't use tools must still accept and ignore it."""
+        mock_request.return_value = "Hello back"
+        engine = ClaudeCodeChatEngine({"claude_binary": "/usr/bin/claude"})
+        messages = [AgentMessage(MessageRole.USER, "Hello")]
+
+        result_none = engine.continue_chat(messages, tools=None)
+        self.assertIsInstance(result_none, AgentMessage)
+
+        result_with_tools = engine.continue_chat(
+            messages, tools=[{"name": "get_weather", "description": "d", "parameters": {}}]
+        )
+        self.assertIsInstance(result_with_tools, AgentMessage)
+
     @patch("ovos_claude.api.ClaudeCodeClient.stream_tokens")
     def test_stream_tokens_delegates(self, mock_stream):
         mock_stream.return_value = iter(["tok1", "tok2"])
