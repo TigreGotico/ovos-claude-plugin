@@ -22,6 +22,19 @@ class TestClaudeMultimodalChatEngine(unittest.TestCase):
         self.assertEqual(result.content, "I see a cat in the image.")
 
     @patch("ovos_claude.multimodal.AnthropicClient.request_multimodal")
+    def test_accepts_tools_keyword_without_error(self, mock_request):
+        """continue_chat must accept ``tools`` per the ChatEngine base contract
+        (ovos_plugin_manager.templates.agents.ChatEngine.continue_chat), even
+        though this engine ignores it (supports_tools=False)."""
+        mock_request.return_value = "I see a cat in the image."
+        engine = ClaudeMultimodalChatEngine(config={"api_key": "test"})
+        messages = [
+            MultimodalAgentMessage(role=MessageRole.USER, content="What is in this image?")
+        ]
+        result = engine.continue_chat(messages, tools=None)
+        self.assertIsInstance(result, MultimodalAgentMessage)
+
+    @patch("ovos_claude.multimodal.AnthropicClient.request_multimodal")
     def test_system_prompt_injected(self, mock_request):
         mock_request.return_value = "Response"
         engine = ClaudeMultimodalChatEngine(config={
