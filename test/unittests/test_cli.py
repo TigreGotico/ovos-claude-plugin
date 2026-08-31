@@ -250,6 +250,17 @@ class TestClaudeCodeChatEngineContinueChat(unittest.TestCase):
         self.assertEqual(result.role, MessageRole.ASSISTANT)
         self.assertEqual(result.content, "Hello back")
 
+    @patch("ovos_claude.api.ClaudeCodeClient.request")
+    def test_accepts_tools_keyword_without_error(self, mock_request):
+        """continue_chat must accept ``tools`` per the ChatEngine base contract
+        (ovos_plugin_manager.templates.agents.ChatEngine.continue_chat), even
+        though this engine ignores it (supports_tools=False)."""
+        mock_request.return_value = "Hello back"
+        engine = ClaudeCodeChatEngine({"claude_binary": "/usr/bin/claude"})
+        messages = [AgentMessage(MessageRole.USER, "Hello")]
+        result = engine.continue_chat(messages, tools=None)
+        self.assertIsInstance(result, AgentMessage)
+
     @patch("ovos_claude.api.ClaudeCodeClient.stream_tokens")
     def test_stream_tokens_delegates(self, mock_stream):
         mock_stream.return_value = iter(["tok1", "tok2"])

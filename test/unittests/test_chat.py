@@ -76,6 +76,17 @@ class TestClaudeChatEngineContinueChat(unittest.TestCase):
         self.assertEqual(result.content, "Hello back")
 
     @patch("ovos_claude.chat.AnthropicClient.request")
+    def test_accepts_tools_keyword_without_error(self, mock_request):
+        """continue_chat must accept ``tools`` per the ChatEngine base contract
+        (ovos_plugin_manager.templates.agents.ChatEngine.continue_chat), even
+        though this engine ignores it (supports_tools=False)."""
+        mock_request.return_value = "Hello back"
+        engine = ClaudeChatEngine({"api_key": "test"})
+        messages = [AgentMessage(MessageRole.USER, "Hello")]
+        result = engine.continue_chat(messages, tools=None)
+        self.assertIsInstance(result, AgentMessage)
+
+    @patch("ovos_claude.chat.AnthropicClient.request")
     def test_get_response_convenience(self, mock_request):
         mock_request.return_value = "Sure"
         engine = ClaudeChatEngine({"api_key": "test"})

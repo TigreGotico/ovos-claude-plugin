@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.2a1](https://github.com/TigreGotico/ovos-claude-plugin/tree/0.0.2a1) (2026-08-31)
+
+[Full Changelog](https://github.com/TigreGotico/ovos-claude-plugin/compare/0.0.1a2...0.0.2a1)
+
+**Merged pull requests:**
+
+- fix: accept tools kwarg in ChatEngine overrides; fix dynamic version [\#8](https://github.com/TigreGotico/ovos-claude-plugin/pull/8) ([JarbasAl](https://github.com/JarbasAl))
+
 ## [0.0.1a2](https://github.com/TigreGotico/ovos-claude-plugin/tree/0.0.1a2) (2026-07-30)
 
 [Full Changelog](https://github.com/TigreGotico/ovos-claude-plugin/compare/0.0.1a1...0.0.1a2)

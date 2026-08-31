@@ -11,6 +11,7 @@ from ovos_plugin_manager.templates.agents import (
     MessageRole,
     MultimodalAgentMessage,
     MultimodalChatEngine,
+    ToolsArg,
 )
 from ovos_utils.log import LOG
 
@@ -62,7 +63,8 @@ class ClaudeMultimodalChatEngine(MultimodalChatEngine):
     def continue_chat(self, messages: List[MultimodalAgentMessage],
                       session_id: str = "default",
                       lang: Optional[str] = None,
-                      units: Optional[str] = None) -> MultimodalAgentMessage:
+                      units: Optional[str] = None,
+                      tools: ToolsArg = None) -> MultimodalAgentMessage:
         """
         Generate a response to a multimodal conversation turn.
 
@@ -72,6 +74,8 @@ class ClaudeMultimodalChatEngine(MultimodalChatEngine):
         Args:
             messages:   Conversation history with optional images.
             session_id: Session identifier (informational).
+            tools:      Accepted for interface compatibility only; ignored.
+                        This engine does not do native tool calling.
             lang:       BCP-47 language code hint (informational).
             units:      Preferred unit system (informational).
 
