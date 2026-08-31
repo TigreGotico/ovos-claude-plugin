@@ -1,2 +1,8 @@
 /.venv/
 /ovos_claude_plugin.egg-info/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
